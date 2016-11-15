@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Your Local Weather</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>	
+	<link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+	<style>
+		html { 
+			background: url("Portfolio/images/Beautiful-Sunrise-Images-HD-Photos.jpg") no-repeat center fixed; 
+			background-size: cover;
+		}
+		.container {
+			background-color:rgba(0, 0, 0, .6);
+			margin:200px auto;
+			width: 40%;
+			padding: 50px;
+		}
+		.greeting {
+			color:#fff;
+			text-align:center;
+			font-size: 30px;
+			font-family: 'Slabo 27px', serif;
+			letter-spacing: 2px;
+			line-height: 50px;
+		}
+		.largText {
+			font-size: 40px;
+		}
+		@media (max-width: 1095px) {
+			.container {width: 60%;}
+		}
+
+		@media (max-width: 1550px) {
+			.container {width: ;}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">	
+		<div class="greeting">
+			<div id="weather"></div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function() {
+
+			let d = new Date();
+			let n = d.getHours();
+			if (n <= 10 )  {
+				$(".greeting").prepend("Good Morning,");
+			}
+			else if (n < 16) {
+				$(".greeting").prepend("Good Afternoon,");
+				$('html').css('background','url("Portfolio/images/sunny-image-2.jpg") no-repeat center fixed');
+			}
+			else {
+				$(".greeting").prepend("Good Evening,");
+				$('html').css({ "background": "url('Portfolio/images/Sunset-Wallpaper-0.jpg') no-repeat center fixed", "background-size": "cover" })
+			}
+
+			$.ajax({
+				url : "http://api.wunderground.com/api/f82b411ab3398523/geolookup/conditions/forecast/q/autoip.json",
+				dataType : "jsonp",
+				success : function(parsed_json) {
+					let city = parsed_json['location']['city'];
+					let state = parsed_json['location']['state'];
+					let temp_f = parsed_json['current_observation']['temp_f'];
+					let weather = parsed_json['current_observation']['weather'];
+					$("#weather").html("Current temperature in " + city + ", " + state + " is: <br /><span class=\"largText\">" + temp_f + " degrees </span>").append("<br />with " + weather);
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>
